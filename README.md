@@ -60,6 +60,21 @@ VideoPlayer::player("http://www.youtube.com/watch?v=iEPTlhBmwRg", "1200", "800",
 # <iframe width=\"1200\" height=\"800\" src=\"//www.youtube.com/embed/iEPTlhBmwRg?autoplay=1&rel=0\" frameborder=\"0\" allowfullscreen></iframe>
 ```
 
+It gets you only raw data. You must handle it on erb, haml, slim, etc for output without HTML escaping.
+
+```ruby
+video = VideoPlayer::player("http://vimeo.com/101419884")
+
+# erb
+<%= video.html_safe %>
+
+# haml, slim
+= video.html_safe
+# or
+== video
+```
+
+
 <a name="contributing"></a>
 ## Contributing
 1. Fork it ( https://github.com/tgezginis/video_player/fork )
