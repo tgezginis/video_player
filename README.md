@@ -31,7 +31,9 @@ or install the gem on terminal.
 > http://vimeo.com/101419884
 
 **width** *(default  = 420)*
+
 **height** *(default  = 315)*
+
 **autoplay** *(default  = true)* - works only on Youtube
 
 
