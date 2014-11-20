@@ -8,8 +8,8 @@ Gem::Specification.new do |spec|
   spec.version       = VideoPlayer::VERSION
   spec.authors       = ["Tolga Gezginiş"]
   spec.email         = ["tolga@gezginis.com"]
-  spec.summary       = %q{Video player for Youtube and Vimeo}
-  spec.description   = %q{Create video player for Youtube and Vimeo videos}
+  spec.summary       = %q{Video player for Youtube, Vimeo and İzlesene}
+  spec.description   = %q{Create video player for Youtube, Vimeo and İzlesene videos}
   spec.homepage      = "https://github.com/tgezginis/video_player"
   spec.license       = "MIT"
 
