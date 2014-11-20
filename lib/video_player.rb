@@ -17,7 +17,18 @@ module VideoPlayer
       url.gsub(/https?:\/\/(www.)?vimeo\.com\/([A-Za-z0-9._%-]*)((\?|#)\S+)?/) do
         vimeo_id = $2
         frameborder = 0
-        return %{<iframe src="//player.vimeo.com/video/#{vimeo_id}" width="#{width}" height="#{height}" frameborder="#{frameborder}"></iframe>}
+        return %{<iframe src="//player.vimeo.com/video/#{vimeo_id}" width="#{width}" height="#{height}" frameborder="0"></iframe>}
+      end
+    elsif url.include? "izlesene"
+      regex = /^http:\/\/(?:.*?)\izlesene\.com\/video\/([\w\-\.]+[^#?\s]+)\/(.*)?$/i
+      url.gsub(regex) do
+        izlesene_video_id = $2
+        if autoplay
+          src = "//www.izlesene.com/embedplayer/#{izlesene_video_id}/?autoplay=1&showrel=0&showinfo=0"
+        else
+          src = "//www.izlesene.com/embedplayer/#{izlesene_video_id}/?autoplay=0&showrel=0&showinfo=0"
+        end
+        return %{<iframe width="#{width}" height="#{height}" src="#{src}" frameborder="0" allowfullscreen></iframe>}
       end
     else
       return false
