@@ -26,10 +26,15 @@ or install the gem on terminal.
 **url**
 
 > Youtube, Vimeo and İzlesene video link
+>
 > http://www.youtube.com/watch?v=iEPTlhBmwRg
+>
 > or
+>
 > http://vimeo.com/101419884
+>
 > or
+>
 > http://www.izlesene.com/video/feder-goodbye-feat-lyse/7886121
 
 **width** *(default  = 420)*
