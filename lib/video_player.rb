@@ -11,13 +11,13 @@ module VideoPlayer
         else
           src = "//www.youtube.com/embed/#{youtube_id}?autoplay=0&rel=0"
         end
-        return %{<iframe width="#{width}" height="#{height}" src="#{src}" frameborder="0" allowfullscreen></iframe>}
+        return %{<iframe width="#{width}" height="#{height}" src="#{src}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>}
       end
     elsif url.include? "vimeo"
       url.gsub(/https?:\/\/(www.)?vimeo\.com\/([A-Za-z0-9._%-]*)((\?|#)\S+)?/) do
         vimeo_id = $2
         frameborder = 0
-        return %{<iframe src="//player.vimeo.com/video/#{vimeo_id}" width="#{width}" height="#{height}" frameborder="0"></iframe>}
+        return %{<iframe src="//player.vimeo.com/video/#{vimeo_id}" width="#{width}" height="#{height}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>}
       end
     elsif url.include? "izlesene"
       regex = /^http:\/\/(?:.*?)\izlesene\.com\/video\/([\w\-\.]+[^#?\s]+)\/(.*)?$/i
@@ -28,7 +28,7 @@ module VideoPlayer
         else
           src = "//www.izlesene.com/embedplayer/#{izlesene_video_id}/?autoplay=0&showrel=0&showinfo=0"
         end
-        return %{<iframe width="#{width}" height="#{height}" src="#{src}" frameborder="0" allowfullscreen></iframe>}
+        return %{<iframe width="#{width}" height="#{height}" src="#{src}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>}
       end
     else
       return false
