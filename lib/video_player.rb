@@ -2,7 +2,7 @@ require "video_player/version"
 
 module VideoPlayer
   def self.player url, width = "420", height = "315", autoplay = true
-    if url.include? "youtube"
+    if url.include? "youtu"
       regex = /(https?:\/\/)?(www.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/watch\?feature=player_embedded&v=)([A-Za-z0-9_-]*)(\&\S+)?(\?\S+)?/
       url.gsub(regex) do
         youtube_id = $4
