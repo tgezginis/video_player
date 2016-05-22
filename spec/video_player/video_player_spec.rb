@@ -118,7 +118,38 @@ describe VideoPlayer do
       end
 
     end
-  end
 
+    context "wistia links" do
+
+      let(:wistia_urls) { [
+        'https://company.wistia.com/medias/12345678'
+      ]}
+
+      it "uses the youtube embed method" do
+        wistia_urls.each do |url|
+          parser = VideoPlayer::Parser.new(url)
+          expect(parser).to receive(:wistia_embed).once
+          parser.embed_code
+        end
+      end
+
+      it "returns a valid embed code" do
+        src = "//fast.wistia.net/embed/iframe/12345678/?autoplay=0&showrel=0&showinfo=0"
+        code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
+
+        url = 'https://company.wistia.com/medias/12345678'
+        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false)).to eq(code)
+      end
+
+      it "returns a valid autoplay embed code" do
+        src = "//fast.wistia.net/embed/iframe/12345678/?autoplay=1&showrel=0&showinfo=0"
+        code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
+
+        url = 'https://company.wistia.com/medias/12345678'
+        expect(VideoPlayer.player(url)).to eq(code)
+      end
+
+    end
+  end
 
 end
