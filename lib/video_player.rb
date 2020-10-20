@@ -5,6 +5,10 @@ module VideoPlayer
     VideoPlayer::Parser.new(*args).embed_code
   end
 
+  def self.embedded_url(video_url)
+    VideoPlayer::Parser.new(video_url).embedded_url
+  end
+
   class Parser
     DefaultWidth = '420'
     DefaultHeight = '315'
@@ -24,16 +28,36 @@ module VideoPlayer
       @autoplay = autoplay
     end
 
-    def embed_code
+    def embedded_url
       case
       when matchdata = url.match(YouTubeRegex)
-        youtube_embed(matchdata[4])
+        "//www.youtube.com/embed/#{matchdata[4]}?autoplay=#{autoplay}&rel=0"
       when matchdata = url.match(VimeoRegex)
-        vimeo_embed(matchdata[2])
+        "//player.vimeo.com/video/#{matchdata[2]}"
       when matchdata = url.match(IzleseneRegex)
-        izlesene_embed(matchdata[2])
+        "//www.izlesene.com/embedplayer/#{matchdata[2]}/?autoplay=#{autoplay}&showrel=0&showinfo=0"
       when matchdata = url.match(WistiaRegex)
-        wistia_embed(matchdata[4])
+        "//fast.wistia.net/embed/iframe/#{matchdata[4]}/?autoplay=#{autoplay}&showrel=0&showinfo=0"
+      end
+    end
+
+    def embed_code
+      # case
+      # when matchdata = url.match(YouTubeRegex)
+      #   youtube_embed(matchdata[4])
+      # when matchdata = url.match(VimeoRegex)
+      #   vimeo_embed(matchdata[2])
+      # when matchdata = url.match(IzleseneRegex)
+      #   izlesene_embed(matchdata[2])
+      # when matchdata = url.match(WistiaRegex)
+      #   wistia_embed(matchdata[4])
+      # else
+      #   false
+      # end
+      src = embedded_url
+
+      if src
+        iframe_code(src)
       else
         false
       end
@@ -47,24 +71,24 @@ module VideoPlayer
       %{<iframe src="#{src}" width="#{width}" height="#{height}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>}
     end
 
-    def youtube_embed(video_id)
-      src = "//www.youtube.com/embed/#{video_id}?autoplay=#{autoplay}&rel=0"
-      iframe_code(src)
-    end
-
-    def vimeo_embed(video_id)
-      src = "//player.vimeo.com/video/#{video_id}"
-      iframe_code(src)
-    end
-
-    def izlesene_embed(video_id)
-      src = "//www.izlesene.com/embedplayer/#{video_id}/?autoplay=#{autoplay}&showrel=0&showinfo=0"
-      iframe_code(src)
-    end
-
-    def wistia_embed(video_id)
-      src = "//fast.wistia.net/embed/iframe/#{video_id}/?autoplay=#{autoplay}&showrel=0&showinfo=0"
-      iframe_code(src)
-    end
+    # def youtube_embed(video_id)
+    #   src = "//www.youtube.com/embed/#{video_id}?autoplay=#{autoplay}&rel=0"
+    #   iframe_code(src)
+    # end
+    #
+    # def vimeo_embed(video_id)
+    #   src = "//player.vimeo.com/video/#{video_id}"
+    #   iframe_code(src)
+    # end
+    #
+    # def izlesene_embed(video_id)
+    #   src = "//www.izlesene.com/embedplayer/#{video_id}/?autoplay=#{autoplay}&showrel=0&showinfo=0"
+    #   iframe_code(src)
+    # end
+    #
+    # def wistia_embed(video_id)
+    #   src = "//fast.wistia.net/embed/iframe/#{video_id}/?autoplay=#{autoplay}&showrel=0&showinfo=0"
+    #   iframe_code(src)
+    # end
   end
 end
