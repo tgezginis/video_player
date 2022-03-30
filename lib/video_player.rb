@@ -9,6 +9,10 @@ module VideoPlayer
     VideoPlayer::Parser.new(video_url).embedded_url
   end
 
+  def self.thumbnail_url(video_url)
+    VideoPlayer::Parser.new(video_url).thumbnail_url
+  end
+
   class Parser
     DefaultWidth = '420'
     DefaultHeight = '315'
@@ -18,6 +22,35 @@ module VideoPlayer
     VimeoRegex    = /\Ahttps?:\/\/(www.)?vimeo\.com\/([A-Za-z0-9._%-]*)((\?|#)\S+)?/i
     IzleseneRegex = /\Ahttp:\/\/(?:.*?)\izlesene\.com\/video\/([\w\-\.]+[^#?\s]+)\/(.*)?$/i
     WistiaRegex   = /\Ahttps?:\/\/(.+)?(wistia.com|wi.st)\/(medias|embed)\/([A-Za-z0-9_-]*)(\&\S+)?(\?\S+)?/i
+
+    # youtube
+    #   default: small - 120x90
+    #   mqdefault: medium - 320x180
+    #   hqdefault: high - 480x360
+    #   sddefault: 640x480
+    #   maxresdefault: original
+
+    # vimeo
+    #   thumbnail_small: 100x75
+    #   thumbnail_medium: 200x150
+    #   thumbnail_large: 640xauto
+    SIZES = {
+      small: ['default', 'thumbnail_small'],
+      medium: ['mqdefault', 'thumbnail_medium'],
+      large: ['sddefault', 'thumbnail_large'],
+      max: ['maxresdefault', 'thumbnail_large'],
+    }
+
+    {
+      youtube:  YouTubeRegex,
+      vimeo:    VimeoRegex,
+      izlesene: IzleseneRegex,
+      wistia:   WistiaRegex,
+    }.each do |method_name, regexp|
+      define_method("#{ method_name }?") do
+        instance_variable_get("@#{ method_name }" ) || instance_variable_set("@#{ method_name }", url.match(regexp))
+      end
+    end
 
     attr_accessor :url, :width, :height
 
@@ -31,14 +64,14 @@ module VideoPlayer
     def embedded_url
       @_embedded_url ||=
         case
-        when matchdata = url.match(YouTubeRegex)
-          "//www.youtube.com/embed/#{matchdata[4]}?autoplay=#{autoplay}&rel=0"
-        when matchdata = url.match(VimeoRegex)
-          "//player.vimeo.com/video/#{matchdata[2]}?autoplay=#{autoplay}"
-        when matchdata = url.match(IzleseneRegex)
-          "//www.izlesene.com/embedplayer/#{matchdata[2]}/?autoplay=#{autoplay}&showrel=0&showinfo=0"
-        when matchdata = url.match(WistiaRegex)
-          "//fast.wistia.net/embed/iframe/#{matchdata[4]}/?autoplay=#{autoplay}&showrel=0&showinfo=0"
+        when matchdata = youtube?
+          "//www.youtube.com/embed/#{ video_id }?autoplay=#{ autoplay }&rel=0"
+        when matchdata = vimeo?
+          "//player.vimeo.com/video/#{ video_id }?autoplay=#{ autoplay }"
+        when matchdata = izlesene?
+          "//www.izlesene.com/embedplayer/#{ video_id }/?autoplay=#{ autoplay }&showrel=0&showinfo=0"
+        when matchdata = wistia?
+          "//fast.wistia.net/embed/iframe/#{ video_id }/?autoplay=#{ autoplay }&showrel=0&showinfo=0"
         end
     end
 
@@ -56,6 +89,32 @@ module VideoPlayer
 
     def iframe_code
       %{<iframe src="#{embedded_url}" width="#{width}" height="#{height}" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>}
+    end
+
+    # size_parameter = { 'small', 'medium', 'large', 'max'}
+    def thumbnail_url(size = 'max')
+      youtube_size, vimeo_size = SIZES[size.to_sym] || ['sddefault', 'thumbnail_large']
+
+      case
+      when youtube? then "https://img.youtube.com/vi/#{ video_id }/#{ youtube_size }.jpg"
+      when vimeo? then
+        begin
+          JSON.parse(URI.open("https://vimeo.com/api/v2/video/#{ video_id }.json").read).first[vimeo_size]
+        rescue
+          nil
+        end
+      when izlesene? then Nokogiri::HTML(open(url)).css("meta[property='og:image']").at_css('meta[property="og:image"]')['content']
+      end
+    end
+
+    def video_id
+      @_video_id ||=
+        case
+        when matchdata = youtube? then matchdata[4]
+        when matchdata = vimeo? then matchdata[2]
+        when matchdata = izlesene? then matchdata[2]
+        when matchdata = wistia? then matchdata[4]
+        end
     end
   end
 end
