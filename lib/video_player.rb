@@ -9,8 +9,8 @@ module VideoPlayer
     VideoPlayer::Parser.new(video_url).embedded_url
   end
 
-  def self.thumbnail_url(video_url)
-    VideoPlayer::Parser.new(video_url).thumbnail_url
+  def self.thumbnail_url(*args)
+    VideoPlayer::Parser.new(*args).thumbnail_url
   end
 
   class Parser
@@ -52,13 +52,14 @@ module VideoPlayer
       end
     end
 
-    attr_accessor :url, :width, :height
+    attr_accessor :url, :width, :height, :access_token
 
-    def initialize(url, width = DefaultWidth, height = DefaultHeight, autoplay = DefaultAutoPlay)
+    def initialize(url, width: DefaultWidth, height: DefaultHeight, autoplay: DefaultAutoPlay, access_token: nil)
       @url = url
       @width = width
       @height = height
       @autoplay = autoplay
+      @access_token = access_token
     end
 
     def embedded_url
@@ -103,7 +104,16 @@ module VideoPlayer
       when youtube? then "https://img.youtube.com/vi/#{ video_id }/#{ youtube_size }.jpg"
       when vimeo? then
         begin
-          JSON.parse(URI.open("https://vimeo.com/api/v2/video/#{ video_id }.json").read).first[vimeo_size]
+          if access_token
+            JSON.parse(
+              URI.open(
+                "https://api.vimeo.com/videos/#{ video_id }",
+                'Authorization' => "Bearer #{ access_token }"
+              ).read
+            ).dig('pictures', 'base_link')
+          else
+            JSON.parse(URI.open("https://vimeo.com/api/v2/video/#{ video_id }.json").read).first[vimeo_size]
+          end
         rescue
           nil
         end
