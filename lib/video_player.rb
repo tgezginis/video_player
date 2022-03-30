@@ -67,7 +67,11 @@ module VideoPlayer
         when matchdata = youtube?
           "//www.youtube.com/embed/#{ video_id }?autoplay=#{ autoplay }&rel=0"
         when matchdata = vimeo?
-          "//player.vimeo.com/video/#{ video_id }?autoplay=#{ autoplay }"
+          # Check for an unlisted code e.g., https://vimeo.com/693890394/4bead26492
+          matched_code = url.match(/\d+\/(.+)/)
+          matched_code = matched_code[1].split('?').first if matched_code
+
+          "//player.vimeo.com/video/#{ video_id }?autoplay=#{ autoplay }#{ "&h=#{ matched_code }" if matched_code }"
         when matchdata = izlesene?
           "//www.izlesene.com/embedplayer/#{ video_id }/?autoplay=#{ autoplay }&showrel=0&showinfo=0"
         when matchdata = wistia?
