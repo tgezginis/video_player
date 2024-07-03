@@ -53,7 +53,7 @@ module VideoPlayer
     end
 
     def vimeo_embed(video_id)
-      src = "//player.vimeo.com/video/#{video_id}"
+      src = "//player.vimeo.com/video/#{video_id}?autoplay=#{autoplay}"
       iframe_code(src)
     end
 
