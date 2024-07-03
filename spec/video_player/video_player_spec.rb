@@ -45,10 +45,10 @@ describe VideoPlayer do
       end
 
       it "returns a valid autoplay embed code" do
-        src = "//www.izlesene.com/embedplayer/12345678/?autoplay=1&showrel=0&showinfo=0"
+        src = "//www.youtube.com/embed/abcde12345?autoplay=1&rel=0"
         code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
 
-        url = 'http://izlesene.com/video/abcde-abcde-abcde-abcde-abcde/12345678'
+        url = 'http://youtube.com/watch?feature=player_embedded&v=abcde12345'
         expect(VideoPlayer.player(url)).to eq(code)
       end
     end
@@ -70,18 +70,18 @@ describe VideoPlayer do
       end
 
       it "returns a valid embed code" do
-        src = "//www.izlesene.com/embedplayer/12345678/?autoplay=0&showrel=0&showinfo=0"
+        src = "//player.vimeo.com/video/12345678?autoplay=0"
         code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
 
-        url = 'http://izlesene.com/video/abcde-abcde-abcde-abcde-abcde/12345678'
+        url = 'http://www.vimeo.com/12345678?autoplay=0&loop=1&autopause=0'
         expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false)).to eq(code)
       end
 
       it "returns a valid autoplay embed code" do
-        src = "//www.izlesene.com/embedplayer/12345678/?autoplay=1&showrel=0&showinfo=0"
+        src = "//player.vimeo.com/video/12345678?autoplay=1"
         code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
 
-        url = 'http://izlesene.com/video/abcde-abcde-abcde-abcde-abcde/12345678'
+        url = 'http://www.vimeo.com/12345678?autoplay=1&loop=1&autopause=0'
         expect(VideoPlayer.player(url)).to eq(code)
       end
     end
