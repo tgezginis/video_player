@@ -45,7 +45,7 @@ describe VideoPlayer do
       end
 
       it "returns a valid autoplay embed code" do
-        src = "//www.youtube.com/embed/abcde12345?autoplay=1&rel=0"
+        src = "//www.youtube.com/embed/abcde12345?autoplay=1&rel=0&mute=1"
         code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
 
         url = 'http://youtube.com/watch?feature=player_embedded&v=abcde12345'

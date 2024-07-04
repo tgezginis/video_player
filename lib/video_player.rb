@@ -48,7 +48,8 @@ module VideoPlayer
     end
 
     def youtube_embed(video_id)
-      src = "//www.youtube.com/embed/#{video_id}?autoplay=#{autoplay}&rel=0"
+      mute = @autoplay ? "&mute=1" : ""
+      src = "//www.youtube.com/embed/#{video_id}?autoplay=#{autoplay}&rel=0#{mute}"
       iframe_code(src)
     end
 
