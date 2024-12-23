@@ -41,7 +41,7 @@ describe VideoPlayer do
         code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
 
         url = 'https://youtube.com/watch?feature=player_embedded&v=abcde12345'
-        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false)).to eq(code)
+        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false, false)).to eq(code)
       end
 
       it "returns a valid autoplay embed code" do
@@ -50,6 +50,14 @@ describe VideoPlayer do
 
         url = 'http://youtube.com/watch?feature=player_embedded&v=abcde12345'
         expect(VideoPlayer.player(url)).to eq(code)
+      end
+
+      it "returns a valid mute embed code" do
+        src = "//www.youtube.com/embed/abcde12345?autoplay=0&rel=0&mute=1"
+        code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
+
+        url = 'http://youtube.com/watch?feature=player_embedded&v=abcde12345'
+        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false, true)).to eq(code)
       end
     end
 
@@ -74,7 +82,7 @@ describe VideoPlayer do
         code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
 
         url = 'http://www.vimeo.com/12345678?autoplay=0&loop=1&autopause=0'
-        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false)).to eq(code)
+        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false, false)).to eq(code)
       end
 
       it "returns a valid autoplay embed code" do
@@ -83,6 +91,14 @@ describe VideoPlayer do
 
         url = 'http://www.vimeo.com/12345678?autoplay=1&loop=1&autopause=0'
         expect(VideoPlayer.player(url)).to eq(code)
+      end
+
+      it "returns a valid mute embed code" do
+        src = "//player.vimeo.com/video/12345678?autoplay=0&muted=1"
+        code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
+
+        url = 'http://www.vimeo.com/12345678?autoplay=0&loop=1&autopause=0'
+        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false, true)).to eq(code)
       end
     end
 
@@ -106,7 +122,7 @@ describe VideoPlayer do
         code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
 
         url = 'http://izlesene.com/video/abcde-abcde-abcde-abcde-abcde/12345678'
-        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false)).to eq(code)
+        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false, false)).to eq(code)
       end
 
       it "returns a valid autoplay embed code" do
@@ -138,7 +154,7 @@ describe VideoPlayer do
         code = %|<iframe src="#{src}" #{width} #{height} #{attributes}></iframe>|
 
         url = 'https://company.wistia.com/medias/12345678'
-        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false)).to eq(code)
+        expect(VideoPlayer.player(url, VideoPlayer::Parser::DefaultWidth, VideoPlayer::Parser::DefaultHeight, false, false)).to eq(code)
       end
 
       it "returns a valid autoplay embed code" do

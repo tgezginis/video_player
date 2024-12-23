@@ -9,6 +9,7 @@ module VideoPlayer
     DefaultWidth = '420'
     DefaultHeight = '315'
     DefaultAutoPlay = true
+    DefaultMute = false
 
     YouTubeRegex  = /\A(https?:\/\/)?(www.)?(youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/watch\?feature=player_embedded&v=)([A-Za-z0-9_-]*)(\&\S+)?(\?\S+)?/i
     VimeoRegex    = /\Ahttps?:\/\/(www.)?vimeo\.com\/([A-Za-z0-9._%-]*)((\?|#)\S+)?/i
@@ -17,11 +18,12 @@ module VideoPlayer
 
     attr_accessor :url, :width, :height
 
-    def initialize(url, width = DefaultWidth, height = DefaultHeight, autoplay = DefaultAutoPlay)
+    def initialize(url, width = DefaultWidth, height = DefaultHeight, autoplay = DefaultAutoPlay, mute = DefaultMute)
       @url = url
       @width = width
       @height = height
       @autoplay = autoplay
+      @mute = mute
     end
 
     def embed_code
@@ -49,11 +51,13 @@ module VideoPlayer
 
     def youtube_embed(video_id)
       src = "//www.youtube.com/embed/#{video_id}?autoplay=#{autoplay}&rel=0"
+      src << "&mute=1" if @mute
       iframe_code(src)
     end
 
     def vimeo_embed(video_id)
       src = "//player.vimeo.com/video/#{video_id}?autoplay=#{autoplay}"
+      src << "&muted=1" if @mute
       iframe_code(src)
     end
 
